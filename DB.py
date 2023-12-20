@@ -176,7 +176,6 @@ class My_DB:
         self.__supplemening__(id_doc, tags)
         for id_tag, tag_name in zip(tags_id, tags):
             self.__add_relationship__(id_doc, id_tag)
-            print("IMPORTANT ", id_tag, tag_name )
             if tag_name in self.tag_info.keys():
                 self.tag_info[tag_name]["document_count"] += 1
             else:
@@ -187,13 +186,11 @@ class My_DB:
         self.docs_n += 1
     
     def __supplemening__(self, id_doc, tags):
-        print('SELECT id_tag FROM Tags WHERE tag NOT IN (%s)'% (",".join([f'"{a}"' for a in tags]))+" AND tag NOT LIKE '!NOT!%'")
-        self.__cursor.execute('SELECT id_tag FROM Tags WHERE tag NOT IN (%s)" '% (",".join([f'"{a}"' for a in tags]))+' AND tag NOT LIKE "!NOT!%')
+        self.__cursor.execute('SELECT id_tag FROM Tags WHERE (tag NOT IN (%s))' % (",".join([f'"{a}"' for a in tags]))+" AND (tag NOT LIKE '!NOT!%')")
         result = self.__clean_result__(self.__cursor.fetchall())
         if(result != []):
             for r in result:
                 anti_tag_id = self.__get_anti_tag__(r)
-                print(r,anti_tag_id, id_doc)
                 self.__cursor.execute('INSERT INTO Relationship (id_doc, id_tag) VALUES (?, ?)', (id_doc, anti_tag_id))
 
     def get_tags_id(self, tags, id_doc):
