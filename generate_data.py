@@ -12,7 +12,7 @@ def generate_tags(count = 10):
     text = Text('ru')
     return text.words(quantity = count)
 
-def generate_relationship(docs, tags, max_tags = 5):
+def generate_relationship(docs, tags, max_tags = 7):
     result = {}
     for doc in docs:
         k = random.randint(0, max_tags)
